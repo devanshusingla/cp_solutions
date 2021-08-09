@@ -1,0 +1,97 @@
+/************************************************************
+/  AUTHOR :  DEVANSHU SINGLA                                /
+/  NICK :  DSINGLA                                          /
+/  INSTITUTE :  IITK                                        /
+************************************************************/
+//                     TEMPLATE                            //
+
+#include <bits/stdc++.h>
+#define ll long long
+#define N 100005
+#define MOD 1000000007
+#define pb push_back
+#define F first
+#define S second
+#define rep(i,n) for(auto i=0*(n); i<(n); i++)
+#define irep(i,n) for(auto i=(0*(n)+1); i<=(n); i++)
+#define drep(i,n) for(auto i=(n)-1; i>=0; i--)
+#define srep(i,s,n) for(auto i=(s); i<(n); i++)
+#define maxs(x,y) (x = max(x,y))
+#define mins(x,y) (x = min(x,y))
+#define show(x) cout<<#x<<" = "<<x<<endl;
+#define V(T...) vector<T>
+#define P(T...) pair<T>
+#define M(T...) map<T>
+#define MM(T...) multimap<T>
+#define MS(T...) multiset<T>
+#define Q(T...) queue<T>
+#define St(T...) stack<T>
+#define PQ(T...) priority_queue<T>
+
+// use cin.ignore() after cin statement.
+using namespace std ;
+
+void dfs(int i, V(V(long)) &g, V(int) &vis, V(int) &a){
+    vis[i] = 0;
+    a[i] = 1;
+    for(auto j:g[i]){
+        if(vis[j]==0) a[j] = -1;
+        else if(vis[j]==-1) dfs(j,g,vis,a);
+        else if(vis[j] == 1 && a[j]!=-1) a[j] = 2; 
+    }
+    vis[i] = 1;
+}
+
+void dfs1(int i, V(V(long)) &g, V(int) &vis, V(int) &a){
+    vis[i] = 0;
+    for(auto j:g[i]){
+        if(vis[j] == -1 || a[j]==1){
+            if(a[i]==-1 && a[j] != -1) {
+                a[j]=-1;
+                dfs1(j,g,vis,a);
+            }
+            else if(a[i]==2 && a[j]==1) {
+                a[j]=2;
+                dfs1(j,g,vis,a);
+            } else if(vis[j]==-1){
+                dfs1(j,g,vis,a);
+            }
+        }
+    }
+}
+
+void solve(){
+    long n,m;
+    cin>>n>>m;
+    vector<vector<long>> g(n);
+    rep(i,m){
+        int x,y;
+        cin>>x>>y;
+        x--;y--;
+        g[x].pb(y);
+    }
+    vector<int> vis(n,-1);
+    vector<int> a(n,0);
+
+    dfs(0, g, vis, a);
+    fill(vis.begin(), vis.end(), -1);
+    dfs1(0,g,vis,a);
+    for(auto i:a) cout<<i<<" ";
+    cout<<endl;
+}
+
+int main(){
+    #ifndef ONLINE_JUDGE 
+ 
+    freopen("/home/devanshu/Desktop/cp/input.txt", "r", stdin);  
+    freopen("/home/devanshu/Desktop/cp/output.txt", "w", stdout); 
+
+    #endif
+    ios_base::sync_with_stdio(false) ;
+    cin.tie(NULL) ;
+    ll t ;
+    cin>>t ;
+    cin.ignore() ;
+    
+    rep(i,t) solve();
+}
